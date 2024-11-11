@@ -73,7 +73,7 @@ useEffect(() => {
 			}
 			
 		} catch (error: any) {
-			message.error(`User is existing`);
+			message.error(` existing`);
 		} finally {
 			setIsLoading(false);
 		}
@@ -281,27 +281,12 @@ useEffect(() => {
 													handleChangeNumsCode(val.target.value, 5);
 												}}
 											/>
-											<Input
-												value={numsOfCode[6]}
-												ref={inpRef6}
-												placeholder=''
-												size='large'
-												style={{
-													fontSize: 32,
-													fontWeight: 'bold',
-													width: 'calc((100% - 90px) / 6)',
-													textAlign: 'center',
-												}}
-												maxLength={1}
-												onChange={(val) => {
-													handleChangeNumsCode(val.target.value, 6);
-												}}
-											/>
+										
 										</div>
 									</div>
 									<div className='mt-4'>
 										<Button
-											// disabled={numsOfCode.length < 6 || times < 0}
+										 disabled={numsOfCode.length < 6 || times < 0}
 											loading={isLoading}
 											type='primary'
 											size='large'
