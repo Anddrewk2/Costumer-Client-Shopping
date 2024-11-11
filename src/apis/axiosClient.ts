@@ -1,31 +1,22 @@
-
 /** @format */
 
+import { appInfo } from '@/constants/appInfos';
 import axios from 'axios';
 import queryString from 'query-string';
-import { localDataNames } from '../constants/appInfos';
-
-const baseURL = `http://192.168.1.100:3001`;
-
-const getAssetToken = () => {
-	const res = localStorage.getItem(localDataNames.authData);
-
-	if (res) {
-		const auth = JSON.parse(res);
-		return auth && auth.token ? auth.token : '';
-		//kiem tra auth co chua token k  , neu co , tra ve token
-	} else {
-		return '';
-	}
-};
 
 const axiosClient = axios.create({
-	baseURL: baseURL,
+	baseURL: appInfo.baseUrl,
 	paramsSerializer: (params) => queryString.stringify(params),
 });
 
+const getAccesstoken = () => {
+	const res = localStorage.getItem('authData');
+
+	return res ? JSON.parse(res).accesstoken : '';
+};
+
 axiosClient.interceptors.request.use(async (config: any) => {
-	const accesstoken = getAssetToken();
+	const accesstoken = getAccesstoken();
 
 	config.headers = {
 		Authorization: accesstoken ? `Bearer ${accesstoken}` : '',
@@ -33,16 +24,15 @@ axiosClient.interceptors.request.use(async (config: any) => {
 		...config.headers,
 	};
 
-	return { ...config, data: config.data ?? null };
+	return { ...config, data: config.data ?? undefined };
 });
 
-axiosClient.interceptors.response.use(
+axios.interceptors.response.use(
 	(res) => {
-		if (res.data && res.status >= 200 && res.status < 300) {
-			return res.data;
+		if (res.data && res.status >= 200 && res.status <= 299) {
+			return res.data.data;
 		} else {
 			return Promise.reject(res.data);
-			//bao loi 
 		}
 	},
 	(error) => {

@@ -1,9 +1,17 @@
-import React from 'react'
+/** @format */
+import { authSelector } from '@/reduxs/reducers/AuthReducer';
+import React from 'react';
+import { useSelector } from 'react-redux';
+import Login from './auth/login';
+import { appInfo } from '@/constants/appInfos';
+import HomePage from './HomePage';
 
-const HomePage = () => {
-  return (
-    <div>chào bạn</div>
-  )
-}
+const Home = (data: any) => {
+	const pageProps = data.pageProps;
 
-export default HomePage
+	const auth = useSelector(authSelector);
+
+	return auth.accesstoken ? <HomePage {...pageProps} /> : <Login />;
+};
+
+export default Home;
