@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack -p 3004",
+    "dev": "next dev  -p 3004",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -14,7 +14,7 @@
     "axios": "^1.7.7",
     "bootstrap": "^5.3.3",
     "firebase": "^11.0.1",
-    "next": "^15.0.4-canary.5",
+    "next": "^15.0.3",
     "query-string": "^9.1.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

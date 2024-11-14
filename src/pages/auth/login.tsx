@@ -5,7 +5,7 @@ import { addAuth } from '@/reduxs/reducers/AuthReducer';
 import { Button, Form, Input, message, Typography } from 'antd';
 import { useForm } from 'antd/es/form/Form';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
+import { redirect, useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -38,7 +38,6 @@ const Login = () => {
 
 			dispatch(addAuth(res.data.data));
 			localStorage.setItem('authData', JSON.stringify(res.data.data));
-
 			router.push(id && slug ? `/products/${slug}/${id}` : '/');
 		} catch (error) {
 			console.log(error);
@@ -56,7 +55,7 @@ const Login = () => {
 				<div
 					className='d-none d-md-block col-6 p-0'
 					style={{
-						backgroundImage: `url(/images/bg-auth-3.png)`,
+						backgroundImage: `url(/images/login.png)`,
 						backgroundSize: 'cover',
 						backgroundRepeat: 'no-repeat',
 					}}>
@@ -120,6 +119,12 @@ const Login = () => {
 										onClick={() => form.submit()}>
 										Login
 									</Button>
+								</div>
+								
+								<div className='mt-3 text-center'>
+									
+											<Link  href={`auth/signup`}>Sign up</Link>
+			
 								</div>
 							</div>
 						</div>

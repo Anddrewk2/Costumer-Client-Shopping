@@ -10,9 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 const { Content, Footer, Header } = Layout;
 
-import { AppProps, Layout, Spin } from 'antd';
-
-import React from 'react';
+import { Layout, Spin } from 'antd';
 
 const Routers = ({ Component, pageProps }: any) => {
 	const [isLoading, setIsLoading] = useState(false);
@@ -22,63 +20,42 @@ const Routers = ({ Component, pageProps }: any) => {
 	const auth = useSelector(authSelector);
 
 	useEffect(() => {
-		getDatabaseDatas();
-	}, [auth]);
+		getData();
+	}, []);
+
+
 
 	const getData = async () => {
-		const res = localStorage.getItem(localDataNames.authData);
-		res && dispatch(addAuth(JSON.parse(res)));
-	};
-
-	const getDatabaseDatas = async () => {
-		setIsLoading(true);
-		try {
-			if (auth._id) {
-				await getCardInDatabase();
+		const Res = localStorage.getItem(localDataNames.authData);
+		if (Res) {
+			try {
+				const parsedData = JSON.parse(Res);
+				dispatch(addAuth(parsedData));
+			} catch (error) {
+				console.error("Invalid JSON format in authData:", error);
+				// Xử lý trường hợp JSON không hợp lệ tại đây, ví dụ xóa key authData khỏi localStorage
+				localStorage.removeItem(localDataNames.authData);
 			}
-		} catch (error) {
-			console.log(error);
-		} finally {
-			setIsLoading(false);
 		}
 	};
+	
+	
 
-	const getCardInDatabase = async () => {
-		const api = `/carts`;
-		try {
-			const res = await handleAPI({ url: api });
-
-			if (res.data && res.data.data.length > 0) {
-				
-			}
-		} catch (error) {}
-	};
-
-	const renderContent = (
-		<Content>
-			<Component pageProps={pageProps} />
-		</Content>
-	);
 
 	return isLoading ? (
 		<Spin />
 	) : !auth || !auth.accesstoken ? (
-		<Layout className='bg-white'>{renderContent}</Layout>
+		<Layout className='bg-white'>
+			<Component pageProps={pageProps} />
+		</Layout>
 	) : (
 		<Layout className='bg-white'>
 			<HeaderComponent />
-			<div>{renderContent}</div>
+			<Content>
+				<Component pageProps={pageProps} />
+			</Content>
 		</Layout>
 	);
 };
 
 export default Routers;
-
-// login rule 2
-// /** @format */
-
-// const Routers = ({ Component, pageProps }: any) => {
-
-// };
-
-// export default Routers;

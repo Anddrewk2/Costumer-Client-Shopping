@@ -30,43 +30,13 @@ const HeaderComponent = () => {
 	const [isVisibleDrawer, setIsVisibleDrawer] = useState(false);
 	const [visibleModalTransationProduct, setVisibleModalTransationProduct] =
 		useState(false);
+	
 
 	const auth = useSelector(authSelector);
 	const dispatch = useDispatch();
 	const router = useRouter();
 
-
-	// youtube: daoquang-livecode
-
-	// useEffect(() => {
-	// 	cart.length > 0 && handleUpdateCardToDatabase(cart);
-	// }, [cart]);
-
-	// const handleUpdateCardToDatabase = async (data: CartItemModel[]) => {
-	// 	data.forEach(async (item) => {
-	// 		const api = `/carts/add-new${item._id ? `?id=${item._id}` : ''}`;
-
-	// 		const value = {
-	// 			createdBy: item.createdBy,
-	// 			count: item.count,
-	// 			subProductId: item.subProductId,
-	// 			size: item.size,
-	// 			title: item.title,
-	// 			color: item.color,
-	// 			price: item.price,
-	// 			qty: item.qty,
-	// 			productId: item.productId,
-	// 			image: item.image,
-	// 		};
-
-	// 		try {
-	// 			await handleAPI({ url: api, data: value, method: 'post' });
-	// 		} catch (error) {
-	// 			console.log(error);
-	// 		}
-	// 	});
-	// };
-
+	
 	return (
 		<Affix offsetTop={0}>
 			<div className='container-fluid bg-white'>
@@ -80,7 +50,7 @@ const HeaderComponent = () => {
 							/>
 						</div>
 						<div className='col d-none d-md-block'>
-							<img src='/images/logo.png' style={{ width: 100 }} alt='' />
+							<img src='/images/images.png' style={{ width: 100 }} alt='' />
 						</div>
 						<div className='col d-none d-md-block text-center'>
 							<Menu
@@ -94,12 +64,12 @@ const HeaderComponent = () => {
 									{
 										label: <Link href={'/shop'}>Shop</Link>,
 										key: 'shop',
-										children: [
-											{
-												key: 'cate',
-												label: 'test',
-											},
-										],
+										// children: [
+										// 	{
+										// 		key: 'cate',
+										// 		label: 'test',
+										// 	},
+										// ],
 									},
 									{
 										label: <Link href={'/story'}>Out story</Link>,
@@ -116,17 +86,32 @@ const HeaderComponent = () => {
 								]}
 							/>
 						</div>
-						
+						<div className='col text-right'>
+							<Space>
+								<Button icon={<IoSearch size={24} />} type='text' />
+								<Button icon={<IoHeartOutline size={24} />} type='text' />
+								{auth.accesstoken && auth._id ? (
+									<Button
+										onClick={() => {
+											dispatch(removeAuth({}));
+											localStorage.clear();
+										}}
+										danger
+										type='text'
+										icon={<BiPowerOff size={23} />}
+									/>
+								) : (
+									<Button
+										type='primary'
+										onClick={() => router.push('/auth/login')}
+										href={`/auth/login`}>
+										Login
+									</Button>
+								)}
+							</Space>
+						</div>
 					</div>
-				</div>
-				<Drawer
-					open={isVisibleDrawer}
-					onClick={() => setIsVisibleDrawer(false)}
-					placement='left'>
-					Hello
-				</Drawer>
-
-		
+				</div>		
 			</div>
 		</Affix>
 	);

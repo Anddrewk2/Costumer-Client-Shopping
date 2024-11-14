@@ -51,7 +51,7 @@ const SignUp = () => {
 
 useEffect(() => {
 
-}), [signValues]
+})
 
 	const handleSignUp = async (values: SignUp) => {
 		const api = `/customers/add-new`;
@@ -64,14 +64,11 @@ useEffect(() => {
 				method: 'post',
 			});
 
-			if (res.data && res.data.data) {
+			if (res.data ) {
 
 				setSignValues(res.data.data);
 				console.log(res.data.data)
-			} else {
-				message.error("Could not retrieve user data.");
-			}
-			
+			} 
 		} catch (error: any) {
 			message.error(` existing`);
 		} finally {
@@ -82,33 +79,30 @@ useEffect(() => {
 	const handleChangeNumsCode = (val: string, index: number) => {
 		const items = [...numsOfCode];
 		items[index] = val;
-
 		setNumsOfCode(items);
 	};
 
-	const handleVerify = async () => {
-		if (numsOfCode.length >= 6) {
+	const handleVerify = async()=> {
+		if(numsOfCode.length >= 6){
 			let code = numsOfCode.join('');
-
-			const api = `/customers/verify?id=${signValues._id}&code=${code}`;
+			const api = `/customers/verify?id=${signValues._id}&code=${code.toUpperCase()}`;
 			try {
 				const res = await handleAPI({
-					url: api,
+					url:api,
 					data: undefined,
-					method: 'put',
-				});
-
+					method: 'put'
+				})
 				dispatch(addAuth(res.data.data));
-				localStorage.setItem('authData', JSON.stringify(res.data.data));
-
+				localStorage.setItem('authData',JSON.stringify(res.data.data));
 				router.push('/');
 			} catch (error) {
-				console.log(error);
-			}
-		} else {
-			message.error('Invalid code');
+				console.log(error)
+			} 
+		} else{
+			message.error('sai');
 		}
 	};
+	
 
 	const handleResendCode = async () => {
 		const api = `/customers/resend-verify?id=${signValues._id}&email=${signValues.email}`;
@@ -127,7 +121,7 @@ useEffect(() => {
 				<div
 					className='d-none d-md-block col-6 p-0'
 					style={{
-						backgroundImage: `url(/images/bg-auth-${
+						backgroundImage: `url(/images/signup-${
 							signValues ? '2' : '1'
 						}.png)`,
 						backgroundSize: 'cover',
