@@ -30,32 +30,41 @@ const HeaderComponent = () => {
 	const [isVisibleDrawer, setIsVisibleDrawer] = useState(false);
 	const [visibleModalTransationProduct, setVisibleModalTransationProduct] =
 		useState(false);
-	
 
 	const auth = useSelector(authSelector);
 	const dispatch = useDispatch();
 	const router = useRouter();
 
-	
+	// Logout handler
+	const handleLogout = () => {
+		// Xóa token và thông tin người dùng khỏi Redux và localStorage
+		dispatch(removeAuth()); // Gọi action removeAuth để reset Redux store
+		localStorage.removeItem('authToken'); // Xóa token trong localStorage
+		localStorage.removeItem('userId'); // Xóa userId trong localStorage
+		// Điều hướng đến trang login
+		localStorage.clear();
+		router.push('/auth/login');
+	};
+
 	return (
 		<Affix offsetTop={0}>
-			<div className='container-fluid bg-white'>
-				<div className='p-3'>
-					<div className='row'>
-						<div className='d-none d-sm-block d-md-none'>
+			<div className="container-fluid bg-white">
+				<div className="p-3">
+					<div className="row">
+						<div className="d-none d-sm-block d-md-none">
 							<Button
-								type='text'
+								type="text"
 								icon={<GiHamburgerMenu size={22} />}
 								onClick={() => setIsVisibleDrawer(true)}
 							/>
 						</div>
-						<div className='col d-none d-md-block'>
-							<img src='/images/images.png' style={{ width: 100 }} alt='' />
+						<div className="col d-none d-md-block">
+							<img src="https://firebasestorage.googleapis.com/v0/b/project-8592240410215207885.appspot.com/o/DH-Hoa-Sen-Main-Icon.png?alt=media&token=22e62305-6796-4db1-b63e-543fe8a001cd" style={{ width: 40 }} alt="" />
 						</div>
-						<div className='col d-none d-md-block text-center'>
+						<div className="col d-none d-md-block text-center">
 							<Menu
 								style={{ border: 'none' }}
-								mode='horizontal'
+								mode="horizontal"
 								items={[
 									{
 										label: <Link href={'/'}>Home</Link>,
@@ -64,15 +73,9 @@ const HeaderComponent = () => {
 									{
 										label: <Link href={'/shop'}>Shop</Link>,
 										key: 'shop',
-										// children: [
-										// 	{
-										// 		key: 'cate',
-										// 		label: 'test',
-										// 	},
-										// ],
 									},
 									{
-										label: <Link href={'/story'}>Out story</Link>,
+										label: <Link href={'/story'}>Our story</Link>,
 										key: 'story',
 									},
 									{
@@ -86,32 +89,29 @@ const HeaderComponent = () => {
 								]}
 							/>
 						</div>
-						<div className='col text-right'>
+						<div className="col text-right">
 							<Space>
-								<Button icon={<IoSearch size={24} />} type='text' />
-								<Button icon={<IoHeartOutline size={24} />} type='text' />
+								<Button icon={<IoSearch size={24} />} type="text" />
+								<Button icon={<IoHeartOutline size={24} />} type="text" />
 								{auth.accesstoken && auth._id ? (
 									<Button
-										onClick={() => {
-											dispatch(removeAuth({}));
-											localStorage.clear();
-										}}
+										onClick={handleLogout} // Logout handler được gọi khi nhấn logout
 										danger
-										type='text'
+										type="text"
 										icon={<BiPowerOff size={23} />}
 									/>
 								) : (
 									<Button
-										type='primary'
-										onClick={() => router.push('/auth/login')}
-										href={`/auth/login`}>
+										type="primary"
+										onClick={() => router.push('/')}
+										href={``}>
 										Login
 									</Button>
 								)}
 							</Space>
 						</div>
 					</div>
-				</div>		
+				</div>
 			</div>
 		</Affix>
 	);

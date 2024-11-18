@@ -1,7 +1,6 @@
 /** @format */
 
 import { createSlice } from '@reduxjs/toolkit';
-
 const authSlice = createSlice({
 	name: 'auth',
 	initialState: {
@@ -14,7 +13,8 @@ const authSlice = createSlice({
 		addAuth: (state, action) => {
 			state.data = action.payload;
 		},
-		removeAuth: (state, _action) => {
+		// Đảm bảo rằng không cần payload khi gọi removeAuth
+		removeAuth: (state) => {
 			state.data = {
 				accesstoken: '',
 				_id: '',
@@ -23,7 +23,7 @@ const authSlice = createSlice({
 	},
 });
 
+
 export const authReducer = authSlice.reducer;
 export const { addAuth, removeAuth } = authSlice.actions;
-
 export const authSelector = (state: any) => state.authReducer.data;

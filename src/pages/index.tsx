@@ -1,17 +1,96 @@
 /** @format */
+
 import { authSelector } from '@/reduxs/reducers/AuthReducer';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import Login from './auth/login';
-import { appInfo } from '@/constants/appInfos';
 import HomePage from './HomePage';
+import { appInfo } from '@/constants/appInfos';
+import Login from './auth/login';
+import {  ProductModel } from '@/models/ProductModel';
+import { CategoyModel } from '@/models/CategoriesModel';
+import { PromotionModel } from '@/models/PromotionModel';
+import handleAPI from '@/apis/handleAPI';
+import { Empty, Skeleton } from 'antd';
 
 const Home = (data: any) => {
 	const pageProps = data.pageProps;
 
-	const auth = useSelector(authSelector);
+	const [promotions, setPromotions] = useState<PromotionModel[]>([]);
+	const [categories, setCategories] = useState<CategoyModel[]>([]);
+	const [bestSellers, setBestSellers] = useState<ProductModel[]>([]);
+	const [isLoading, setIsLoading] = useState(false);
 
-	return auth.accesstoken ? <HomePage {...pageProps} /> : <Login />;
+	useEffect(() => {
+		getDatas();
+	}, []);
+
+	const getDatas = async () => {
+		setIsLoading(true);
+		try {
+			await getPromotions();
+			await getCategories();
+			await getProducts();
+		} catch (error) {
+			console.log(error);
+		} finally {
+			setIsLoading(false);
+		}
+	};
+
+	const getPromotions = async () => {
+		const res = await handleAPI({ url: `/promotions?limit=5` });
+
+		res && res.data && res.data.data && setPromotions(res.data.data);
+	};
+
+	const getCategories = async () => {
+		const res = await handleAPI({ url: `/categories/get-categories` });
+		res && res.data && res.data.data && setCategories(res.data.data);
+	};
+
+	const getProducts = async () => {
+		const res = await handleAPI({ url: `/products/get-best-seller` });
+		res && res.data && res.data.data && setBestSellers(res.data.data);
+	};
+
+	return isLoading ? (
+		<Skeleton />
+	) : (
+		<HomePage
+			promotions={promotions}
+			categories={categories}
+			bestSellers={bestSellers}
+		/>
+	);
 };
 
 export default Home;
+
+export const getStaticProps = async () => {
+	try {
+		const res = await fetch(`${appInfo.baseUrl}/promotions?limit=5`);
+		const result = await res.json();
+
+		const resCats = await fetch(`${appInfo.baseUrl}/categories/get-categories`);
+		const resultCats = await resCats.json();
+
+		const resBestSeller = await fetch(
+			`${appInfo.baseUrl}/products/get-best-seller`
+		);
+		const resultsSeller = await resBestSeller.json();
+
+		return {
+			props: {
+				promotions: result.data || [],
+				categories: resultCats.data || [],
+				bestSellers: resultsSeller.data || [],
+			},
+		};
+	} catch (error) {
+		return {
+			props: {
+				data: [],
+			},
+		};
+	}
+};
