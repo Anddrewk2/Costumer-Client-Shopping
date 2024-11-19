@@ -123,7 +123,7 @@ const Login = () => {
 								
 								<div className='mt-3 text-center'>
 									
-											<Link  href={`auth/signup`}>Sign up</Link>
+											<Link  href={`signup`}>Sign up</Link>
 			
 								</div>
 							</div>

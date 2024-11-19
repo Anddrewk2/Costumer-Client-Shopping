@@ -20,6 +20,7 @@ const { Title, Text, Paragraph } = Typography;
 
 const ProductItem = (props: Props) => {
 	const { item } = props;
+	console.log(item)
 	const [elementWidth, setElementWidth] = useState();
 
 	const ref = useRef<any>();
@@ -33,7 +34,7 @@ const ProductItem = (props: Props) => {
  
 	return (
 		<Link
-			href={`/products/${item.slug}/${item._id}`}
+			href={`/product/${item.slug}/${item._id}`}
 			ref={ref}
 			key={item._id}
 			className='col-sm-6 col-md-4 col-lg-3 mb-4 product-item'>
@@ -87,7 +88,7 @@ const ProductItem = (props: Props) => {
 					</div>
 					<div className='text-center'>
 						<Button
-							onClick={() => router.push(`/products/${item.slug}/${item._id}`)}
+							onClick={() => router.push(`/product/${item.slug}/${item._id}`)}
 							size='large'
 							style={{ width: '80%' }}>
 							Detail
@@ -96,8 +97,8 @@ const ProductItem = (props: Props) => {
 				</div>
 			</div>
 			<div className='p-2'>
-				<Paragraph style={{ fontWeight: 'bold' }}>{item.supplier}</Paragraph>
-				<Paragraph>{item.title}</Paragraph>
+				<Paragraph style={{ fontWeight: 'bold' }}>{item.title}</Paragraph>
+				<Paragraph>{item.description}</Paragraph>
 				<Paragraph style={{ fontSize: '1.1em' }}>
 					{item.price && item.price.length > 0
 						? `${VND.format(item.price[0])} - ${VND.format(item.price[1])}`

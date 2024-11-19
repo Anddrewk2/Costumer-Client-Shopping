@@ -22,7 +22,6 @@ interface Props {
 const HomePage = (props: Props) => {
 	// const { promotions, categories, bestSellers } = props;
 	const { promotions, categories, bestSellers } = props;
-	console.log(props)
 	const [numOfColumn, setNumOfColumn] = useState<number>();
 	const [catsArrays, setCatsArrays] = useState<
 		{

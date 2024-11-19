@@ -1,5 +1,7 @@
 /** @format */
 
+import { SupplierModel } from "./SupplierModel";
+
 
 export interface ProductModel {
 	_id: string;
@@ -7,8 +9,9 @@ export interface ProductModel {
 	slug: string;
 	description: string;
 	categories: string[];
+	content: String,
 	images: string[];
-	supplier: string;
+	supplier: string[];
 	createdAt: string;
 	updatedAt: string;
 	__v: number;
