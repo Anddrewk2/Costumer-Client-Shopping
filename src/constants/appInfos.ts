@@ -8,4 +8,18 @@ export const appInfo = {
 	title: 'cosmetics Beautiful',
 	description: '',
 	baseUrl: 'http://192.168.1.100:3001',
+	monthShortNames: [
+		'Jan',
+		'Feb',
+		'Mar',
+		'Apr',
+		'May',
+		'Jun',
+		'Jul',
+		'Aug',
+		'Sept',
+		'Oct',
+		'Nov',
+		'Dec',
+	],
 };

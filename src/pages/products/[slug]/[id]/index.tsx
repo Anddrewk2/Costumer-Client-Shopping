@@ -4,12 +4,18 @@ import handleAPI from '@/apis/handleAPI';
 import {
 	CarouselImages,
 	ProductItem,
+	Reviews,
 	TabbarComponent,
 } from '@/components';
-import HeadComponent from '@/components/Headcomponent';
+import HeadComponent from '@/components/HeadComponent';
 import { appInfo } from '@/constants/appInfos';
 import { ProductModel, SubProductModel } from '@/models/ProductModel';
 import { authSelector } from '@/reduxs/reducers/AuthReducer';
+import {
+	addProduct,
+	cartSelector,
+	changeCount,
+} from '@/reduxs/reducers/cartReducer';
 import { VND } from '@/utils/handleCurrency';
 import {
 	Breadcrumb,
@@ -41,8 +47,8 @@ const ProductDetail = ({ pageProps }: any) => {
 		product: ProductModel;
 		subProducts: SubProductModel[];
 	} = pageProps.data.result.data;
-	console.log(pageProps.data.result.data)
 	const relatedProducts = pageProps.data.itemCats.data;
+
 	const [detail, setdetail] = useState<ProductModel>(product);
 	const [subProductSelected, setSubProductSelected] =
 		useState<SubProductModel>();
@@ -60,6 +66,7 @@ const ProductDetail = ({ pageProps }: any) => {
 	const params = useParams();
 	const id = params ? params.id : '';
 
+	const cart: SubProductModel[] = useSelector(cartSelector);
 	const dispatch = useDispatch();
 
 	useEffect(() => {
@@ -75,6 +82,124 @@ const ProductDetail = ({ pageProps }: any) => {
 	useEffect(() => {
 		setCount(1);
 	}, [subProductSelected]);
+
+	useEffect(() => {
+		handleGetReviewData();
+	}, [id]);
+
+	useEffect(() => {
+		const item = cart.find(
+			(element) => element._id === subProductSelected?._id
+		);
+		if (subProductSelected) {
+			if (item) {
+				const qty = subProductSelected?.qty - item.count;
+				setInstockQuantity(qty);
+			} else {
+				setInstockQuantity(subProductSelected?.qty);
+			}
+		}
+	}, [cart, subProductSelected]);
+
+	const handleCart = async () => {
+		if (auth._id && auth.accesstoken) {
+			if (subProductSelected) {
+				const item = subProductSelected;
+				const value = {
+					createdBy: auth._id,
+					count,
+					subProductId: item._id,
+					size: item.size,
+					title: detail.title,
+					color: item.color,
+					price: item.discount ? item.discount : item.price,
+					qty: item.qty,
+					productId: item.productId,
+					image: item.images[0] ?? '',
+				};
+
+				const index = cart.findIndex(
+					(element: any) => element.subProductId === value.subProductId
+				);
+
+				try {
+					if (index !== -1) {
+						await handleAPI({
+							url: `/carts/update?id=${cart[index]._id}`,
+							data: { count: cart[index].count + count },
+							method: 'put',
+						});
+
+						dispatch(changeCount({ id: cart[index]._id, val: count }));
+					} else {
+						const res = await handleAPI({
+							url: '/carts/add-new',
+							data: value,
+							method: 'post',
+						});
+						dispatch(addProduct(res.data.data));
+					}
+				} catch (error) {
+					console.log(error);
+				}
+			} else {
+				message.error('Please choice a product!!!!');
+			}
+		} else {
+			router.push(`/auth/login?productId=${detail._id}&slug=${detail.slug}`);
+		}
+	};
+
+	const renderButtonGroup = () => {
+		const item = cart.find(
+			(element) => element._id === subProductSelected?._id
+		);
+
+		return (
+			subProductSelected && (
+				<>
+					<div className='button-groups'>
+						<Button
+							onClick={() => setCount(count + 1)}
+							disabled={
+								count ===
+								(item
+									? (subProductSelected.qty = item.count)
+									: subProductSelected.qty)
+							}
+							type='text'
+							icon={<IoAddSharp size={22} />}
+						/>
+						<Text>{count}</Text>
+						<Button
+							onClick={() => setCount(count - 1)}
+							disabled={count === 1}
+							type='text'
+							icon={<LuMinus size={22} />}
+						/>
+					</div>
+					<Button
+						disabled={item?.count === subProductSelected.qty}
+						onClick={handleCart}
+						size='large'
+						type='primary'
+						style={{ minWidth: 200 }}>
+						Add to Cart
+					</Button>
+				</>
+			)
+		);
+	};
+
+	const handleGetReviewData = async () => {
+		const api = `/reviews/get-start-count?id=${id}`;
+		try {
+			const res: any = await handleAPI({ url: api });
+			setReviewDatas(res.data.data);
+		} catch (error) {
+			console.log(error);
+		}
+	};
 
 	return subProductSelected ? (
 		<div>
@@ -131,19 +256,19 @@ const ProductDetail = ({ pageProps }: any) => {
 							<div className='row'>
 								<div className='col'>
 									<Typography.Title className='m-0' level={2}>
-										{detail.title}
+										{detail.supplier}
 									</Typography.Title>
 									<Typography.Title
 										className='mt-0'
 										style={{ fontWeight: 300 }}
 										level={4}>
-										{detail.content}
+										{detail.title}
 									</Typography.Title>
 								</div>
 								<div>
 									<Tag color={subProductSelected.qty > 0 ? 'success' : 'error'}>
 										{subProductSelected.qty > 0
-											? `In Stock (${subProductSelected.qty})`
+											? `In Stock (${instockQuantity})`
 											: 'out Stock'}
 									</Tag>
 								</div>
@@ -238,7 +363,12 @@ const ProductDetail = ({ pageProps }: any) => {
 											))}
 									</Space>
 								</div>
-								
+								<div className='mt-5'>
+									<Space>
+										{renderButtonGroup()}
+										<Button size='large' icon={<IoHeartOutline size={22} />} />
+									</Space>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -249,7 +379,14 @@ const ProductDetail = ({ pageProps }: any) => {
 									key: '1',
 									label: 'Description',
 									children: (
-										<Paragraph>{detail.description}</Paragraph>
+										<>
+											<p>
+												Lorem ipsum dolor, sit amet consectetur adipisicing
+												elit. Dolor temporibus esse nam est, velit quae tempora.
+												Voluptatum laborum facere consequatur. Cum, et labore id
+												aut nisi veniam. Et, dolor! Tempora?
+											</p>
+										</>
 									),
 								},
 								{
@@ -261,12 +398,28 @@ const ProductDetail = ({ pageProps }: any) => {
 										</>
 									),
 								},
-						
+								{
+									key: '3',
+									label: 'Reviews',
+									children: id ? (
+										<Reviews productId={id as string} />
+									) : (
+										<Empty />
+									),
+								},
 							]}
 						/>
 					</div>
 					<div className='mt-4'>
-					
+						<TabbarComponent title='Related products' />
+						<div className='row'>
+						{Array.isArray(relatedProducts) && relatedProducts.length > 0 && 
+	relatedProducts.map((item: ProductModel) => (
+		<ProductItem item={item} key={item._id} />
+	))
+}
+
+						</div>
 					</div>
 				</div>
 			</div>

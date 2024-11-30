@@ -1,7 +1,7 @@
 /** @format */
 
 import { ProductItem, Section, TabbarComponent } from '@/components';
-import HeadComponent from '@/components/Headcomponent';
+import HeadComponent from '@/components/HeadComponent';
 import {  ProductModel } from '@/models/ProductModel';
 import { CategoyModel } from '@/models/CategoriesModel';
 import { PromotionModel } from '@/models/PromotionModel';

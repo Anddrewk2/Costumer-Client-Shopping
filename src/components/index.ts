@@ -1,10 +1,19 @@
-import ProductItem from "./ProductItem";
-import Section from "./Section";
-import TabbarComponent from "./TabbarComponent";
-import CarouselImages from "./CarouselImages";
+/** @format */
+
+import AddNewAddress from './AddNewAddress';
+import ButtonRemoveCartItem from './ButtonRemoveCartItem';
+import CarouselImages from './CarouselImages';
+import ProductItem from './ProductItem';
+import Reviews from './Reviews';
+import Section from './Section';
+import TabbarComponent from './TabbarComponent';
+
 export {
-    Section,
-    TabbarComponent,
-    ProductItem,
-    CarouselImages
-}
+	TabbarComponent,
+	Section,
+	ProductItem,
+	CarouselImages,
+	ButtonRemoveCartItem,
+	AddNewAddress,
+	Reviews,
+};
