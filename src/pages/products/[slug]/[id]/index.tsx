@@ -256,12 +256,6 @@ const ProductDetail = ({ pageProps }: any) => {
 							<div className='row'>
 								<div className='col'>
 									<Typography.Title className='m-0' level={2}>
-										{detail.supplier}
-									</Typography.Title>
-									<Typography.Title
-										className='mt-0'
-										style={{ fontWeight: 300 }}
-										level={4}>
 										{detail.title}
 									</Typography.Title>
 								</div>

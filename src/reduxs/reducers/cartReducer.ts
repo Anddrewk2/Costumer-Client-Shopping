@@ -66,14 +66,16 @@ const cartSlice = createSlice({
 			const items = [...state.data];
 			const { id, val } = action.payload;
 			const index = items.findIndex((element) => element._id === id);
-
-			if (index - 1) {
+		
+			if (index !== -1) { // Sửa từ `index - 1` thành `index !== -1`
 				const newValue = items[index].count + val;
-				items[index].count = newValue;
+				// Đảm bảo rằng số lượng không bị âm
+				items[index].count = newValue > 0 ? newValue : 1;
 			}
-
+		
 			state.data = items;
 		},
+		
 		syncProducts: (state, action) => {
 			state.data = action.payload;
 		},

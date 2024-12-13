@@ -47,6 +47,7 @@ const ShipingAddress = (props: Props) => {
 		try {
 			const res = await handleAPI({ url: api });
 			setAddress(res.data.data);
+			console.log(res.data.data , api)
 		} catch (error) {
 			console.log(error);
 		} finally {

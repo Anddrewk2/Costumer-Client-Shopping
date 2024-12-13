@@ -38,7 +38,6 @@ const CategoriesListCard = (props: Props) => {
 		try {
 			const res = await handleAPI({ url: api });
 			res && res.data.data && changeListToTreeList(res.data.data);
-			console.log(res.data.data)
 		} catch (error) {
 			console.log(error);
 		} finally {

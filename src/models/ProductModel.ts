@@ -11,7 +11,7 @@ export interface ProductModel {
 	categories: string[];
 	content: String,
 	images: string[];
-	supplier: string[];
+    supplier: string[] | { name: string }[]; // Nếu supplier có thể là một mảng object.
 	createdAt: string;
 	updatedAt: string;
 	__v: number;

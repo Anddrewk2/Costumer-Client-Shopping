@@ -51,6 +51,7 @@ const Home = (data: any) => {
 	const getProducts = async () => {
 		const res = await handleAPI({ url: `/products/get-best-seller` });
 		res && res.data && res.data.data && setBestSellers(res.data.data);
+		console.log(res.data.data)
 	};
 
 	return isLoading ? (

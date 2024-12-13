@@ -96,8 +96,8 @@ const ProductItem = (props: Props) => {
 				</div>
 			</div>
 			<div className='p-2'>
-				<Paragraph style={{ fontWeight: 'bold' }}>{item.supplier}</Paragraph>
-				<Paragraph>{item.title}</Paragraph>
+				<Paragraph style={{ fontWeight: 'bold' }}>{item.title}</Paragraph>
+				<Paragraph>{item.description}</Paragraph>
 				<Paragraph style={{ fontSize: '1.1em' }}>
 					{item.price && item.price.length > 0
 						? `${VND.format(item.price[0])} - ${VND.format(item.price[1])}`
