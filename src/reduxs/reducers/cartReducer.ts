@@ -66,18 +66,19 @@ const cartSlice = createSlice({
 			const items = [...state.data];
 			const { id, val } = action.payload;
 			const index = items.findIndex((element) => element._id === id);
-		
-			if (index !== -1) { // Sửa từ `index - 1` thành `index !== -1`
+
+			if (index - 1) {
 				const newValue = items[index].count + val;
-				// Đảm bảo rằng số lượng không bị âm
-				items[index].count = newValue > 0 ? newValue : 1;
+				items[index].count = newValue;
 			}
-		
+
 			state.data = items;
 		},
-		
 		syncProducts: (state, action) => {
 			state.data = action.payload;
+		},
+		removeCarts: (state, action) => {
+			state.data = [];
 		},
 	},
 });
@@ -89,6 +90,7 @@ export const {
 	removeProduct,
 	changeCount,
 	changeProduct,
+	removeCarts,
 } = cartSlice.actions;
 
 export const cartSelector = (state: any) => state.cartReducer.data;

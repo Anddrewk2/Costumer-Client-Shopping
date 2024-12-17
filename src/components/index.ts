@@ -7,6 +7,7 @@ import ProductItem from './ProductItem';
 import Reviews from './Reviews';
 import Section from './Section';
 import TabbarComponent from './TabbarComponent';
+import PersonalInformation from './PersonalInformation'
 
 export {
 	TabbarComponent,
@@ -16,4 +17,5 @@ export {
 	ButtonRemoveCartItem,
 	AddNewAddress,
 	Reviews,
+	PersonalInformation,
 };

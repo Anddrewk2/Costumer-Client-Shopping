@@ -3,38 +3,25 @@
 import handleAPI from '@/apis/handleAPI';
 import { ProductItem } from '@/components';
 import { ProductModel } from '@/models/ProductModel';
-import { getTreeValues } from '@/utils/getTreeValues';
-import { SelectModel } from '@/models/FormModel';
 import {
 	Breadcrumb,
 	Button,
-	Checkbox,
 	Empty,
 	Layout,
 	Pagination,
-	Select,
 	Skeleton,
 	Space,
 	Typography,
 } from 'antd';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import React, { use, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BsArrowDown } from 'react-icons/bs';
 import { FaElementor } from 'react-icons/fa';
 
 const { Sider, Content } = Layout;
 
 const ShopPage = () => {
-
-	const getdata =async () => {
-		try {
-			getCategories();
-		} catch (error) {
-			
-		}
-	}
-
 	const [filterValues, setFilterValues] = useState<{
 		catIds: string[];
 	}>({
@@ -43,14 +30,11 @@ const ShopPage = () => {
 	const [api, setApi] = useState('');
 	const [isLoading, setIsLoading] = useState(false);
 	const [products, setProducts] = useState<ProductModel[]>([]);
-	const [categories, setcategories] = useState<SelectModel[]>([]);
 	const [page, setPage] = useState(1);
 	const [totalPage, setTotalPage] = useState(1);
+
 	const params = useSearchParams();
 	const catId = params.get('catId');
-	useEffect(() => {
-		getdata();
-	}, []);
 
 	useEffect(() => {
 		if (catId) {
@@ -92,16 +76,9 @@ const ShopPage = () => {
 		setFilterValues(items);
 	};
 
-	const getCategories= async() => {
-		const res = await handleAPI({
-			url: '/categories/get-categories',
-		});
-		const vals = res.data ? res.data.data : [];
-		const trueCategories = getTreeValues(vals , true)
-		setcategories(trueCategories);
-	}
 	const getProductsByFilterValues = async () => {
 		setIsLoading(true);
+		console.log(api);
 		try {
 			const res = await handleAPI({ url: api });
 			const { items, pageCount } = res.data.data;
@@ -140,14 +117,7 @@ const ShopPage = () => {
 
 				<Layout className='bg-white mt-3 mb-4'>
 					<div className='d-none d-md-block'>
-						<Sider theme='light'>
-							<div className="mb-4">
-							<Checkbox.Group onChange={vals => console.log(vals)}
-								options={categories}
-								/>
-								
-							</div>
-						</Sider>
+						<Sider theme='light'>sider</Sider>
 					</div>
 					{isLoading ? (
 						<Skeleton />
@@ -155,7 +125,7 @@ const ShopPage = () => {
 						<Content>
 							<div className='container'>
 								<div className='row d-none d-md-block'>
-									<div className=''>
+									<div className='col'>
 										<Space>
 											<Button
 												type='text'
@@ -206,7 +176,3 @@ const ShopPage = () => {
 };
 
 export default ShopPage;
-
-function getdata() {
-	throw new Error('Function not implemented.');
-}

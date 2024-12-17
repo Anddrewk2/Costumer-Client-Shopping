@@ -1,5 +1,5 @@
 /** @format */
 
 import TransationSubProductModal from './TransationSubProductModal';
-
-export { TransationSubProductModal };
+import AddressModal from './AddressModal'
+export { TransationSubProductModal , AddressModal };

@@ -2,10 +2,9 @@
 
 import handleAPI from '@/apis/handleAPI';
 import { addAuth } from '@/reduxs/reducers/AuthReducer';
-import { Button, Form, Input, message, Typography } from 'antd';
-import { useForm } from 'antd/es/form/Form';
+import { Button, Divider, Form, Input, message, Typography } from 'antd';
 import Link from 'next/link';
-import { redirect, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -38,6 +37,7 @@ const Login = () => {
 
 			dispatch(addAuth(res.data.data));
 			localStorage.setItem('authData', JSON.stringify(res.data.data));
+
 			router.push(id && slug ? `/products/${slug}/${id}` : '/');
 		} catch (error) {
 			console.log(error);
@@ -55,7 +55,7 @@ const Login = () => {
 				<div
 					className='d-none d-md-block col-6 p-0'
 					style={{
-						backgroundImage: `url(/images/login.png)`,
+						backgroundImage: `url(/images/bg-auth-3.png)`,
 						backgroundSize: 'cover',
 						backgroundRepeat: 'no-repeat',
 					}}>
@@ -120,11 +120,9 @@ const Login = () => {
 										Login
 									</Button>
 								</div>
-								
+								<Divider />
 								<div className='mt-3 text-center'>
-									
-											<Link  href={`signup`}>Sign up</Link>
-			
+									<Link href={`/auth/signup`}>Sign Up</Link>
 								</div>
 							</div>
 						</div>
